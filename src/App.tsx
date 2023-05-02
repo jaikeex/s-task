@@ -1,13 +1,16 @@
 import React from 'react';
 import './App.css';
 import { Controls } from 'components';
-import { DataContextProvider } from 'context/DataContextProvider';
+import { useTableData } from 'hooks';
 
 function App() {
+  const { data, generateData, sortData, updateCell } = useTableData(); // eslint-disable-line
+
   return (
-    <DataContextProvider>
-      <Controls />
-    </DataContextProvider>
+    <Controls
+      onFormSubmit={generateData}
+      onSort={sortData}
+    />
   );
 }
 

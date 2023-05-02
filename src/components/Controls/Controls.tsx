@@ -1,24 +1,26 @@
 import React, { useCallback, useState } from 'react';
 import { Button, Input } from 'components';
-import { useDataContext } from 'context/DataContextProvider';
 
-export const Controls: React.FC = (): JSX.Element => {
-  const [columnsCount, setColumnsCount] = useState<number>(1);
-  const [rowsCount, setRowsCount] = useState<number>(1);
-  const { generateData, sortData } = useDataContext();
+type ControlsProps = {
+  onFormSubmit: (rows: number, columns: number) => void;
+  onSort: (order: 'ASC' | 'DESC' | 'DEFAULT') => void;
+};
 
-  const handleClick = useCallback(() => {
-    generateData(rowsCount, columnsCount);
-  }, [generateData, rowsCount, columnsCount]);
+export const Controls: React.FC<ControlsProps> = ({ onFormSubmit, onSort }): JSX.Element => {
+  const [columnsCount, setColumnsCount] = useState<number>(10);
+  const [rowsCount, setRowsCount] = useState<number>(10);
+
+  const handleSubmit = useCallback(
+    (event: React.FormEvent) => {
+      event.preventDefault();
+      onFormSubmit(rowsCount, columnsCount);
+    },
+    [onFormSubmit, rowsCount, columnsCount]
+  );
 
   const handleColumnsInput = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = Number(event.target.value);
-
-      if (value < 1) {
-        return;
-      }
-
       setColumnsCount(value);
     },
     [setColumnsCount]
@@ -27,11 +29,6 @@ export const Controls: React.FC = (): JSX.Element => {
   const handleRowsInput = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = Number(event.target.value);
-
-      if (value < 1) {
-        return;
-      }
-
       setRowsCount(value);
     },
     [setRowsCount]
@@ -39,32 +36,41 @@ export const Controls: React.FC = (): JSX.Element => {
 
   const handleSort = useCallback(
     (order: 'ASC' | 'DESC' | 'DEFAULT') => () => {
-      sortData(order);
+      onSort(order);
     },
-    [sortData]
+    [onSort]
   );
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <Input
-        label="Number of columns:"
-        onChange={handleColumnsInput}
-        value={columnsCount}
-        type="number"
-        name="columns"
-        id="columns"
-      />
+    <React.Fragment>
+      <form
+        className="flex flex-col items-center gap-4"
+        onSubmit={handleSubmit}
+      >
+        <Input
+          label="Number of columns:"
+          onChange={handleColumnsInput}
+          value={columnsCount}
+          type="number"
+          min="1"
+          name="columns"
+          id="columns"
+          required
+        />
 
-      <Input
-        label="Number of rows:"
-        onChange={handleRowsInput}
-        value={rowsCount}
-        type="number"
-        name="rows"
-        id="rows"
-      />
+        <Input
+          label="Number of rows:"
+          onChange={handleRowsInput}
+          value={rowsCount}
+          type="number"
+          min="1"
+          name="rows"
+          id="rows"
+          required
+        />
 
-      <Button onClick={handleClick}>Create table</Button>
+        <Button type="submit">Create table</Button>
+      </form>
 
       <div className="text-center space-x-4 space-y-2 mt-4">
         <h4 className="font-semibold">Sort table by row total</h4>
@@ -72,6 +78,6 @@ export const Controls: React.FC = (): JSX.Element => {
         <Button onClick={handleSort('DESC')}>Descending</Button>
         <Button onClick={handleSort('DEFAULT')}>Reset</Button>
       </div>
-    </div>
+    </React.Fragment>
   );
 };

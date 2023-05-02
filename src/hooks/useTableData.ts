@@ -1,20 +1,7 @@
-import React, { createContext, useContext, useMemo, useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import type { TableData } from 'types';
 import { generateNewRandomData, generateRandomValue, sortData } from './utils';
 import { produce } from 'immer';
-
-type DataContextValue = {
-  data: DataReducerState;
-  generateData: (rows: number, columns: number) => void;
-  sortData: (order: 'ASC' | 'DESC' | 'DEFAULT') => void;
-  updateCell: (rowIndex: number, colIndex: number) => void;
-};
-
-const DataContext = createContext<DataContextValue>({} as DataContextValue);
-
-export const useDataContext = () => useContext(DataContext);
-
-type DataContextProviderProps = React.PropsWithChildren;
 
 interface DataReducerState {
   data: TableData;
@@ -53,7 +40,14 @@ const dataReducer = produce((draft: DataReducerState, action: DataReducerAction)
   }
 });
 
-export const DataContextProvider: React.FC<DataContextProviderProps> = ({ children = null }): JSX.Element => {
+interface IUseDataTable {
+  data: DataReducerState;
+  generateData: (rows: number, columns: number) => void;
+  sortData: (order: 'ASC' | 'DESC' | 'DEFAULT') => void;
+  updateCell: (rowIndex: number, colIndex: number) => void;
+}
+
+export const useTableData = (): IUseDataTable => {
   const [data, dispatchData] = useReducer(dataReducer, { data: [], initialData: [] });
 
   const generateData = (rows: number, columns: number) => {
@@ -68,10 +62,9 @@ export const DataContextProvider: React.FC<DataContextProviderProps> = ({ childr
     dispatchData({ type: 'UPDATE_CELL', rowIndex, colIndex });
   };
 
-  const contextValue = useMemo(
-    () => ({ data, generateData, sortData, updateCell }),
-    [data, generateData, sortData, updateCell]
-  );
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
-  return <DataContext.Provider value={contextValue}>{children}</DataContext.Provider>;
+  return { data, generateData, sortData, updateCell };
 };
