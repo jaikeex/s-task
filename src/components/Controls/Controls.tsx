@@ -44,11 +44,11 @@ export const Controls: React.FC<ControlsProps> = ({ onFormSubmit, onSort }): JSX
   return (
     <React.Fragment>
       <form
-        className="flex flex-col items-center gap-4"
+        className="flex flex-col items-center gap-4 max-w-xs mx-auto"
         onSubmit={handleSubmit}
       >
         <Input
-          label="Number of columns:"
+          label="Number of columns (min 1):"
           onChange={handleColumnsInput}
           value={columnsCount}
           type="number"
@@ -59,7 +59,7 @@ export const Controls: React.FC<ControlsProps> = ({ onFormSubmit, onSort }): JSX
         />
 
         <Input
-          label="Number of rows:"
+          label="Number of rows (min 1):"
           onChange={handleRowsInput}
           value={rowsCount}
           type="number"
@@ -69,14 +69,14 @@ export const Controls: React.FC<ControlsProps> = ({ onFormSubmit, onSort }): JSX
           required
         />
 
-        <Button type="submit">Create table</Button>
+        <Button type="submit">Generate data</Button>
       </form>
 
-      <div className="text-center space-x-4 space-y-2 mt-4">
-        <h4 className="font-semibold">Sort table by row total</h4>
+      <div className="text-center space-x-4 space-y-2 mt-6">
+        <h4 className="font-semibold">SORT ROWS BY TOTAL SUM</h4>
         <Button onClick={handleSort('ASC')}>Ascending</Button>
         <Button onClick={handleSort('DESC')}>Descending</Button>
-        <Button onClick={handleSort('DEFAULT')}>Reset</Button>
+        <Button onClick={handleSort('DEFAULT')}>Reset sort</Button>
       </div>
     </React.Fragment>
   );
