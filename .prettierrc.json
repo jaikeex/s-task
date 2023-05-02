@@ -6,5 +6,6 @@
   "trailingComma": "none",
   "singleQuote": true,
   "quoteProps": "preserve",
-  "endOfLine": "auto"
+  "endOfLine": "auto",
+  "singleAttributePerLine": true
 }
