@@ -2,7 +2,7 @@ import type { NumericRange, TableData } from 'types';
 
 export const generateRandomValue = () => (Math.floor(Math.random() * 9) + 1) as NumericRange<1, 10>;
 
-export const generateNewRandomData = (columns: number, rows: number): TableData => {
+export const generateNewRandomData = (rows: number, columns: number): TableData => {
   const data = Array.from({ length: rows }, (_, index) => ({
     rowNumber: index + 1,
     values: Array.from({ length: columns }, () => generateRandomValue())
