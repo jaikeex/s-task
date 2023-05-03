@@ -5,7 +5,7 @@ import { produce } from 'immer';
 
 interface DataReducerState {
   data: TableData;
-  initialData: TableData;
+  unsortedData: TableData;
 }
 
 type DataReducerAction =
@@ -15,11 +15,16 @@ type DataReducerAction =
   | { type: 'UPDATE_CELL'; rowIndex: number; colIndex: number; }
   | { type: 'GENERATE_DATA'; rows: number; columns: number; };
 
+const dataStateInitializer = (data: TableData) => ({
+  unsortedData: data,
+  data: data
+});
+
 const dataReducer = produce((draft: DataReducerState, action: DataReducerAction) => {
   switch (action.type) {
     case 'GENERATE_DATA': {
       const generatedData = generateNewRandomData(action.rows, action.columns);
-      draft.initialData = generatedData;
+      draft.unsortedData = generatedData;
       draft.data = generatedData;
       break;
     }
@@ -30,16 +35,16 @@ const dataReducer = produce((draft: DataReducerState, action: DataReducerAction)
       draft.data = sortData(draft.data, 'DESC');
       break;
     case 'SORT_DEFAULT':
-      draft.data = draft.initialData;
+      draft.data = draft.unsortedData;
       break;
     case 'UPDATE_CELL': {
       const newValue = generateRandomValue();
       const rowNumber = draft.data[action.rowIndex].rowNumber;
-      const initialDataRow = draft.initialData.find((row) => row.rowNumber === rowNumber);
+      const unsortedDataRow = draft.unsortedData.find((row) => row.rowNumber === rowNumber);
       draft.data[action.rowIndex].values[action.colIndex] = newValue;
 
-      if (initialDataRow) {
-        initialDataRow.values[action.colIndex] = newValue;
+      if (unsortedDataRow) {
+        unsortedDataRow.values[action.colIndex] = newValue;
       }
       break;
     }
@@ -96,7 +101,7 @@ interface IUseDataTable {
  * updateCell(50, 5); // Re-generates the value inside the cell in 50th row and 5th column (both zero based).
  */
 export const useTableData = (initialData: TableData = []): IUseDataTable => {
-  const [data, dispatchData] = useReducer(dataReducer, { data: initialData, initialData: initialData });
+  const [data, dispatchData] = useReducer(dataReducer, initialData, dataStateInitializer);
 
   const generateData = useCallback(
     (rows: number, columns: number) => {

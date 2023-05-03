@@ -8,10 +8,18 @@ export interface Column {
    */
   width: number;
   /**
-   * Fullfills the role of the "format" option as specified in the requirements.
+   * Enables further customization of the column.
    */
-  format: {
-    oddColor: string;
-    evenColor: string;
-  };
+  format: ColumnFormat;
+}
+
+interface ColumnFormat {
+  /**
+   * Text color of odd numbers.
+   */
+  oddColor: string;
+  /**
+   * Text color of even numbers.
+   */
+  evenColor: string;
 }

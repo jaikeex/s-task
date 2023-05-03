@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import { Controls, Table } from 'components';
 import { useTableData } from 'hooks';
 

@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "test": "vitest",
     "lint": "prettier --write . && eslint . --fix",
     "preview": "vite preview",
     "prepare": "husky install"
   },
   "dependencies": {
+    "immer": "^10.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -27,12 +29,24 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
     "husky": "^8.0.3",
-    "immer": "^10.0.1",
     "postcss": "^8.4.23",
     "prettier": "^2.8.8",
     "tailwindcss": "^3.3.2",
     "typescript": "^5.0.2",
     "vite": "^4.3.2",
     "vite-tsconfig-paths": "^4.2.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.01%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      ">0.01%",
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { calculateVisibleRows } from './utils';
 
 interface Options {
   /**
@@ -91,8 +92,8 @@ export const useVirtualizedScroll = <T, S extends HTMLElement = HTMLDivElement>(
     }
 
     const scrollTop = containerRef.current.scrollTop;
-    const firstVisibleRow = Math.max(Math.floor(scrollTop / rowHeight) - buffer, 0);
-    const lastVisibleRow = Math.ceil((scrollTop + containerRef.current.clientHeight) / rowHeight) + buffer;
+    const clientHeight = containerRef.current.clientHeight;
+    const { firstVisibleRow, lastVisibleRow } = calculateVisibleRows(scrollTop, clientHeight, rowHeight, buffer);
 
     setVisibleRows({ first: firstVisibleRow, last: lastVisibleRow });
   }, [containerRef, rowHeight, buffer, setVisibleRows]);

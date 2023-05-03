@@ -5,11 +5,14 @@ type TableHeaderProps = { columns: Column[]; } & React.ComponentProps<'thead'>;
 
 export const TableHeader: React.FC<TableHeaderProps> = ({ columns, ...props }): JSX.Element => (
   <thead
-    className="sticky top-0 left-0 z-10 bg-white"
+    className="sticky top-0 left-0 z-10 bg-white h-10"
     {...props}
   >
-    <tr className="h-10 min-w-full flex">
-      <th className="w-32" />
+    <tr className="min-w-full flex">
+      {/* First column, intentionally left blank */}
+      <th className="w-40" />
+
+      {/* Named data columns */}
       {columns.map((col, index) => (
         <th
           key={`${col.name}-${index}`}

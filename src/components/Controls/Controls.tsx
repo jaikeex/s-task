@@ -8,7 +8,7 @@ type ControlsProps = {
 
 export const Controls: React.FC<ControlsProps> = ({ onFormSubmit, onSort }): JSX.Element => {
   const [columnsCount, setColumnsCount] = useState<number>(10);
-  const [rowsCount, setRowsCount] = useState<number>(10);
+  const [rowsCount, setRowsCount] = useState<number>(100);
 
   const handleSubmit = useCallback(
     (event: React.FormEvent) => {

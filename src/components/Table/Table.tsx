@@ -1,9 +1,9 @@
-import { useVirtualizedScroll } from 'hooks';
 import React, { useCallback } from 'react';
+import { useVirtualizedScroll } from 'hooks';
 import type { Column, TableData } from 'types';
-import { TableCell } from './TableCell';
-import { TableRow } from './TableRow';
 import { TableHeader } from './TableHeader';
+import { TableRow } from './TableRow';
+import { TableCell } from './TableCell';
 
 export interface TableProps {
   data: TableData;
@@ -31,38 +31,41 @@ export const Table: React.FC<TableProps> = ({
     <div
       ref={containerRef}
       onScroll={handleScroll}
-      className={`relative overflow-auto h-[520px] mt-12`}
+      className={`relative overflow-auto h-[520px] mt-12 w-fit max-w-full mx-auto`}
     >
-      <table
-        className={`h-[${rowHeight * data.length}px] w-full`}
-        style={{
-          height: rowHeight * data.length
-        }}
-      >
-        <TableHeader columns={columns} />
-        <tbody>
-          {visibleData.map((row, rowIndex) => (
-            <TableRow
-              key={`row-${row.rowNumber}`}
-              top={(rowIndex + firstVisibleRow + 1) * rowHeight}
-            >
-              <td className="py-2 px-4 w-32 flex-shrink-0">{`Row no. ${row.rowNumber}`}</td>
-              {row.values.map((value, colIndex) => (
-                <TableCell
-                  key={`cell-${row.rowNumber}-${colIndex}`}
-                  onDoubleClick={handleCellDoubleClick(rowIndex + firstVisibleRow, colIndex)}
-                  style={{
-                    color: value % 2 === 0 ? columns[colIndex].format.evenColor : columns[colIndex].format.oddColor,
-                    width: columns[colIndex].width
-                  }}
-                >
-                  {value}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </tbody>
-      </table>
+      {data.length > 0 ? (
+        <table style={{ height: rowHeight * data.length }}>
+          <TableHeader columns={columns} />
+          <tbody>
+            {visibleData.map((row, rowIndex) => (
+              <TableRow
+                key={`row-${row.rowNumber}`}
+                top={(rowIndex + firstVisibleRow + 1) * rowHeight}
+              >
+                {/* Title Column */}
+                <td className="py-2 px-4 w-40 flex-shrink-0">{`Row no. ${row.rowNumber}`}</td>
+
+                {/* Data columns */}
+                {row.values.map((value, colIndex) => {
+                  if (colIndex >= columns.length) return null;
+                  return (
+                    <TableCell
+                      key={`cell-${row.rowNumber}-${colIndex}`}
+                      onDoubleClick={handleCellDoubleClick(rowIndex + firstVisibleRow, colIndex)}
+                      style={{
+                        color: value % 2 === 0 ? columns[colIndex].format.evenColor : columns[colIndex].format.oddColor,
+                        width: columns[colIndex].width
+                      }}
+                    >
+                      {value}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </tbody>
+        </table>
+      ) : null}
     </div>
   );
 };
