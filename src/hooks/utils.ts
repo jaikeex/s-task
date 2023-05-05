@@ -11,12 +11,17 @@ export const generateNewRandomData = (rows: number, columns: number): TableData 
   return data;
 };
 
-export const sortData = (data: TableData, order: 'ASC' | 'DESC') =>
-  data.sort((a, b) => {
-    const sumA = a.values.reduce((sum: number, current) => sum + current, 0);
-    const sumB = b.values.reduce((sum: number, current) => sum + current, 0);
-    return order === 'ASC' ? sumA - sumB : sumB - sumA;
-  });
+export const sortData = (data: TableData, order: 'ASC' | 'DESC' | 'DEFAULT') => {
+  if (order === 'DEFAULT') {
+    return data.sort((a, b) => a.rowNumber - b.rowNumber);
+  } else {
+    return data.sort((a, b) => {
+      const sumA = a.values.reduce((sum: number, current) => sum + current, 0);
+      const sumB = b.values.reduce((sum: number, current) => sum + current, 0);
+      return order === 'ASC' ? sumA - sumB : sumB - sumA;
+    });
+  }
+};
 
 export const calculateVisibleRows = (scrollTop: number, clientHeight: number, rowHeight: number, buffer: number) => {
   const firstVisibleRow = Math.max(Math.floor(scrollTop / rowHeight) - buffer, 0);

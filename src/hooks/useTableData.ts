@@ -5,7 +5,6 @@ import { produce } from 'immer';
 
 interface DataReducerState {
   data: TableData;
-  unsortedData: TableData;
 }
 
 type DataReducerAction =
@@ -16,18 +15,14 @@ type DataReducerAction =
   | { type: 'GENERATE_DATA'; rows: number; columns: number; };
 
 const dataStateInitializer = (data: TableData) => ({
-  unsortedData: data,
   data: data
 });
 
 const dataReducer = produce((draft: DataReducerState, action: DataReducerAction) => {
   switch (action.type) {
-    case 'GENERATE_DATA': {
-      const generatedData = generateNewRandomData(action.rows, action.columns);
-      draft.unsortedData = generatedData;
-      draft.data = generatedData;
+    case 'GENERATE_DATA':
+      draft.data = generateNewRandomData(action.rows, action.columns);
       break;
-    }
     case 'SORT_ASC':
       draft.data = sortData(draft.data, 'ASC');
       break;
@@ -35,25 +30,17 @@ const dataReducer = produce((draft: DataReducerState, action: DataReducerAction)
       draft.data = sortData(draft.data, 'DESC');
       break;
     case 'SORT_DEFAULT':
-      draft.data = draft.unsortedData;
+      draft.data = sortData(draft.data, 'DEFAULT');
       break;
-    case 'UPDATE_CELL': {
-      const newValue = generateRandomValue();
-      const rowNumber = draft.data[action.rowIndex].rowNumber;
-      const unsortedDataRow = draft.unsortedData.find((row) => row.rowNumber === rowNumber);
-      draft.data[action.rowIndex].values[action.colIndex] = newValue;
-
-      if (unsortedDataRow) {
-        unsortedDataRow.values[action.colIndex] = newValue;
-      }
+    case 'UPDATE_CELL':
+      draft.data[action.rowIndex].values[action.colIndex] = generateRandomValue();
       break;
-    }
     default:
       break;
   }
 });
 
-interface IUseDataTable {
+interface IUseTableData {
   /**
    * The table data
    */
@@ -74,6 +61,7 @@ interface IUseDataTable {
    */
   sortData: (order: 'ASC' | 'DESC' | 'DEFAULT') => void;
   /**
+   * Randomly re-generates the value in a target cell, identified by its row and columnd indices.
    *
    * @param rowIndex index of row where the updated cell can be found. Must be the current index (after sorting).
    * @param colIndex index of column there the updated cell can be found.
@@ -100,7 +88,7 @@ interface IUseDataTable {
  * sortData("DEFAULT"); // Resets the order of displayed data to its default state.
  * updateCell(50, 5); // Re-generates the value inside the cell in 50th row and 5th column (both zero based).
  */
-export const useTableData = (initialData: TableData = []): IUseDataTable => {
+export const useTableData = (initialData: TableData = []): IUseTableData => {
   const [data, dispatchData] = useReducer(dataReducer, initialData, dataStateInitializer);
 
   const generateData = useCallback(

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import { Button, Input } from 'components';
 
 type ControlsProps = {
@@ -6,7 +6,7 @@ type ControlsProps = {
   onSort: (order: 'ASC' | 'DESC' | 'DEFAULT') => void;
 };
 
-export const Controls: React.FC<ControlsProps> = ({ onFormSubmit, onSort }): JSX.Element => {
+export const Controls: React.FC<ControlsProps> = memo(({ onFormSubmit, onSort }): JSX.Element => {
   const [columnsCount, setColumnsCount] = useState<number>(10);
   const [rowsCount, setRowsCount] = useState<number>(100);
 
@@ -80,4 +80,4 @@ export const Controls: React.FC<ControlsProps> = ({ onFormSubmit, onSort }): JSX
       </div>
     </React.Fragment>
   );
-};
+});

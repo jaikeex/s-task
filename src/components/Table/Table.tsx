@@ -50,7 +50,7 @@ export const Table: React.FC<TableProps> = ({
                   if (colIndex >= columns.length) return null;
                   return (
                     <TableCell
-                      key={`cell-${row.rowNumber}-${colIndex}`}
+                      key={`cell-${rowIndex}-${colIndex}`}
                       onDoubleClick={handleCellDoubleClick(rowIndex + firstVisibleRow, colIndex)}
                       style={{
                         color: value % 2 === 0 ? columns[colIndex].format.evenColor : columns[colIndex].format.oddColor,
